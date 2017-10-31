@@ -17,7 +17,8 @@ def remove_punct(text):
     >>> remove_punct(",go!So.?uTh")
     'goSouTh'
     """
-    pass # The pass statement does nothing. Replace it with the body of your function.
+    for c in string.punctuation:
+        return text.replace(c, "") # The pass statement does nothing. Replace it with the body of your function.
     
     
 def remove_spaces(text):
@@ -36,14 +37,13 @@ def remove_spaces(text):
     >>> remove_spaces("   ")
     ''
     """
-    pass
+    return text.replace(" ", "")
 
-
-def normalise_input(user_input):
+def normalise_input(inp):
     """This function removes all punctuation, leading and trailing
     spaces from a string, and converts the string to lower case.
     For example:
-
+    
     >>> normalise_input("  Go south! ")
     'go south'
     >>> normalise_input("!!! tAkE,. LAmp!?! ")
@@ -51,7 +51,10 @@ def normalise_input(user_input):
     >>> normalise_input("HELP!!!!!!!")
     'help'
     """
-    pass
+    inp = remove_punct(inp)
+    inp = remove_spaces(inp)
+    return(inp.lower())
+        
 
     
 def display_room(room):
@@ -74,9 +77,9 @@ def display_room(room):
     
     """
     print("")
-    print(str.upper(rooms[room]["name"]))
+    print(room["name"].upper())
     print("")
-    print((rooms[room]["description"]))
+    print(room["description"])
     print("")
     # pass # The pass statement does nothing. Replace it with the body of your function.
 
@@ -93,8 +96,7 @@ def exit_leads_to(exits, direction):
     >>> exit_leads_to(rooms["Tutor"]["exits"], "west")
     'Reception'
     """
-    pass
-    
+    print_menu_line(exits, direction)
 
 def print_menu_line(direction, leads_to):
     """This function prints a line of a menu of exits. It takes two strings: a
@@ -109,8 +111,7 @@ def print_menu_line(direction, leads_to):
     >>> print_menu_line("south", "MJ and Simon's room")
     Go SOUTH to MJ and Simon's room.
     """
-    def print_menu_line(direction, leads_to):
-    print(str.upper(direction), "to", leads_to
+    print(str.upper(direction), "to", leads_to)
 
 
 def print_menu(exits):
@@ -128,16 +129,17 @@ def print_menu(exits):
     Go SOUTH to MJ and Simon's room.
     Where do you want to go?
     """
-    print("You can:")
+    print("You can go:")
     
-    # COMPLETE THIS PART:
-    # Iterate over available exits:
-    #     and for each exit print the appropriate menu line
+    
+    for place in exits:
+                exit_leads_to(place, exits[place])
 
     print("Where do you want to go?")
 
 
-def is_valid_exit(exits, user_input):
+
+def is_valid_exit(exits, inp):
     """This function checks, given a dictionary "exits" (see map.py) and
     a players's choice "user_input" whether the player has chosen a valid exit.
     It returns True if the exit is valid, and False otherwise. Assume that
@@ -153,7 +155,11 @@ def is_valid_exit(exits, user_input):
     >>> is_valid_exit(rooms["Parking"]["exits"], "east")
     True
     """
-    pass
+    p_direction = list(exits.keys())
+    if inp in p_direction:
+        return True
+    else:
+        return False
 
 
 def menu(exits):
@@ -168,18 +174,22 @@ def menu(exits):
 
     # Repeat until the player enter a valid choice
     while True:
-        pass
-        # COMPLETE THIS PART:
         
+        # COMPLETE THIS PART:
+        print_menu(exits)
         # Display menu
-
+        
+        inp = input("")
         # Read player's input
-
+        inp = normalise_input(inp)
         # Normalise the input
-
-        # Check if the input makes sense (is valid exit)
+        if is_valid_exit(exits, inp):
+               # Check if the input makes sense (is valid exit)
             # If so, return the player's choice
-
+            return inp
+        else:
+          print("That isn't a valid input.")
+        
 
 
 
@@ -187,7 +197,7 @@ def move(exits, direction):
     """This function returns the room into which the player will move if, from a
     dictionary "exits" of avaiable exits, they choose to move towards the exit
     with the name given by "direction". For example:
-
+    
     >>> move(rooms["Reception"]["exits"], "south") == rooms["Admins"]
     True
     >>> move(rooms["Reception"]["exits"], "east") == rooms["Tutor"]
@@ -195,7 +205,8 @@ def move(exits, direction):
     >>> move(rooms["Reception"]["exits"], "west") == rooms["Office"]
     False
     """
-    pass
+    
+    return(exits[direction])    
 
 
 # This is the entry point of our program
@@ -215,7 +226,8 @@ def main():
         direction = menu(exits)
 
         # Move the protagonist, i.e. update the current room
-        current_room = move(exits, direction)
+        current_room = rooms[move(exits, direction)]
+       
 
 
 # Are we being run as a script? If so, run main().
